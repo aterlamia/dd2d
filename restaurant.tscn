@@ -1,0 +1,476 @@
+[gd_scene format=4 uid="uid://cm17fqimtfmr2"]
+
+[ext_resource type="Script" uid="uid://bx8l30m4lspwl" path="res://Restaurant.cs" id="1_fb16x"]
+[ext_resource type="TileSet" uid="uid://dkfq75mvcsc8m" path="res://rest.tres" id="1_mtvav"]
+[ext_resource type="Texture2D" uid="uid://byssib0rvg0du" path="res://walkingf.png" id="2_1pkq2"]
+[ext_resource type="Script" uid="uid://d3qwpsaireuuy" path="res://Character.cs" id="2_v3g5v"]
+[ext_resource type="Script" uid="uid://867oo5vn32xx" path="res://Visitor.cs" id="3_i0tqs"]
+[ext_resource type="Texture2D" uid="uid://dkdi8tihq3i4b" path="res://walkb.png" id="4_q1hja"]
+[ext_resource type="Texture2D" uid="uid://p5rogqwkvyi" path="res://walks.png" id="5_q1hja"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_s0jpr"]
+radius = 10.0
+height = 30.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v3g5v"]
+radius = 9.0
+
+[sub_resource type="Animation" id="Animation_v3g5v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_1pkq2")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:vframes")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:flip_h")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("AnimationPlayer:speed_scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.3]
+}
+
+[sub_resource type="Animation" id="Animation_6h7lm"]
+resource_name = "WalkB"
+length = 0.13333334
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_q1hja")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.10000001),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AnimationPlayer:speed_scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.20000000000000015]
+}
+
+[sub_resource type="Animation" id="Animation_pp8ob"]
+resource_name = "WalkF"
+length = 0.13333334
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_1pkq2")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.10000001),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AnimationPlayer:speed_scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.20000000000000015]
+}
+
+[sub_resource type="Animation" id="Animation_i0tqs"]
+resource_name = "WalkL"
+length = 0.26666668
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("5_q1hja")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.10000001, 0.13333334, 0.16666667, 0.20000002, 0.23333335),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:flip_h")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AnimationPlayer:speed_scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.4]
+}
+
+[sub_resource type="Animation" id="Animation_4h5jk"]
+resource_name = "WalkR"
+length = 0.26666668
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("5_q1hja")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.10000001, 0.13333334, 0.16666667, 0.20000002, 0.23333335),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:flip_h")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AnimationPlayer:speed_scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.4]
+}
+
+[sub_resource type="Animation" id="Animation_fb16x"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_1pkq2")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:hframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:vframes")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:flip_h")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q1hja"]
+_data = {
+&"RESET": SubResource("Animation_v3g5v"),
+&"WalkB": SubResource("Animation_6h7lm"),
+&"WalkF": SubResource("Animation_pp8ob"),
+&"WalkL": SubResource("Animation_i0tqs"),
+&"WalkR": SubResource("Animation_4h5jk"),
+&"idle": SubResource("Animation_fb16x")
+}
+
+[node name="Restaurtant" type="Node2D" unique_id=285435174]
+script = ExtResource("1_fb16x")
+
+[node name="Floor" type="TileMapLayer" parent="." unique_id=1350623181]
+tile_map_data = PackedByteArray("AAD8//3/AgAIAAAAAAD8//7/AgABAAEAAAD8////AgAAAAEAAAD8/wAAAgABAAAAAAD8/wEAAgAAAAAAAAD8/wIAAgAAAAEAAAD8/wMAAgAAAAAAAAD8/wQAAgAAAAEAAAD8/wUAAgAAAAEAAAD8/wYAAgAIAAAAAAD8/wcAAgAAAAEAAAD9//3/AgABAAEAAAD9//7/AgABAAEAAAD9////AgAAAAAAAAD9/wAAAgAAAAAAAAD9/wEAAgABAAEAAAD9/wIAAgAAAAAAAAD9/wMAAgAAAAAAAAD9/wQAAgABAAAAAAD9/wUAAgAAAAAAAAD9/wYAAgAAAAAAAAD9/wcAAgAAAAAAAAD+//3/AgABAAAAAAD+//7/AgABAAEAAAD+////AgABAAAAAAD+/wAAAgABAAAAAAD+/wEAAgABAAEAAAD+/wIAAgAAAAEAAAD+/wMAAgAAAAAAAAD+/wQAAgABAAEAAAD+/wUAAgAAAAAAAAD+/wYAAgAAAAAAAAD+/wcAAgABAAAAAAD///3/AgABAAAAAAD///7/AgAAAAEAAAD/////AgAAAAAAAAD//wAAAgAAAAEAAAD//wEAAgABAAEAAAD//wIAAgAAAAAAAAD//wMAAgAAAAAAAAD//wQAAgABAAAAAAD//wUAAgAAAAAAAAD//wYAAgAAAAAAAAD//wcAAgAAAAEAAAAAAP3/AgABAAAAAAAAAP7/AgAAAAAAAAAAAP//AgAAAAEAAAAAAAAAAgAAAAEAAAAAAAEAAgABAAAAAAAAAAIAAgAAAAAAAAAAAAMAAgAAAAEAAAAAAAQAAgAAAAEAAAAAAAUAAgAAAAEAAAAAAAYAAgAAAAEAAAAAAAcAAgAAAAAAAAABAP3/AgAAAAEAAAABAP7/AgABAAAAAAABAP//AgABAAEAAAABAAAAAgAAAAAAAAABAAEAAgAAAAEAAAABAAIAAgAAAAAAAAABAAMAAgAAAAAAAAABAAQAAgABAAEAAAABAAUAAgABAAAAAAABAAYAAgAAAAAAAAABAAcAAgABAAAAAAACAP3/AgAAAAAAAAACAP7/AgABAAEAAAACAP//AgABAAEAAAACAAAAAgAAAAAAAAACAAEAAgAIAAAAAAACAAIAAgABAAEAAAACAAMAAgABAAAAAAACAAQAAgAAAAAAAAACAAUAAgABAAEAAAACAAYAAgAAAAAAAAACAAcAAgAAAAAAAAADAP3/AgABAAEAAAADAP7/AgAAAAAAAAADAP//AgABAAAAAAADAAAAAgABAAAAAAADAAEAAgABAAEAAAADAAIAAgABAAAAAAADAAMAAgAAAAAAAAADAAQAAgAAAAAAAAADAAUAAgAAAAEAAAADAAYAAgABAAAAAAADAAcAAgAIAAAAAAAEAP3/AgAAAAEAAAAEAP7/AgABAAEAAAAEAP//AgAAAAEAAAAEAAAAAgAAAAEAAAAEAAEAAgAAAAEAAAAEAAIAAgAAAAEAAAAEAAMAAgABAAAAAAAEAAQAAgABAAEAAAAEAAUAAgABAAEAAAAEAAYAAgABAAEAAAAEAAcAAgAAAAEAAAAFAP3/AgAAAAEAAAAFAP7/AgABAAAAAAAFAP//AgAAAAEAAAAFAAAAAgABAAEAAAAFAAEAAgAAAAAAAAAFAAIAAgAAAAAAAAAFAAMAAgABAAAAAAAFAAQAAgAAAAAAAAAFAAUAAgAIAAEAAAAFAAYAAgAJAAEAAAAFAAcAAgAAAAAAAAAGAP3/AgAAAAEAAAAGAP7/AgAAAAAAAAAGAP//AgAIAAEAAAAGAAAAAgAIAAAAAAAGAAEAAgAAAAEAAAAGAAIAAgAIAAAAAAAGAAMAAgABAAAAAAAGAAQAAgAIAAEAAAAGAAUAAgAIAAEAAAAGAAYAAgABAAEAAAAGAAcAAgABAAAAAAAHAP3/AgABAAEAAAAHAP7/AgAIAAEAAAAHAP//AgAIAAAAAAAHAAAAAgABAAEAAAAHAAEAAgABAAAAAAAHAAIAAgAAAAAAAAAHAAMAAgABAAAAAAAHAAQAAgAIAAAAAAAHAAUAAgAAAAEAAAAHAAYAAgABAAAAAAAHAAcAAgAAAAAAAAAIAP3/AgAIAAEAAAAIAP7/AgABAAEAAAAIAP//AgAIAAEAAAAIAAAAAgABAAAAAAAIAAEAAgAJAAAAAAAIAAIAAgAJAAEAAAAIAAMAAgAAAAEAAAAIAAQAAgAJAAAAAAAIAAUAAgAJAAEAAAAIAAYAAgAJAAEAAAAIAAcAAgAJAAAAAAAJAP3/AgAJAAEAAAAJAP7/AgAAAAAAAAAJAP//AgAIAAAAAAAJAAAAAgAIAAAAAAAJAAEAAgAJAAEAAAAJAAIAAgABAAEAAAAJAAMAAgAAAAAAAAAJAAQAAgAAAAAAAAAJAAUAAgAIAAAAAAAJAAYAAgABAAAAAAAJAAcAAgABAAAAAAABAAgAAgABAAAAAAA=")
+tile_set = ExtResource("1_mtvav")
+
+[node name="Furniture" type="TileMapLayer" parent="." unique_id=1933847453]
+tile_map_data = PackedByteArray("AAD8////AQADAAAAAAD9////AQABAAAAAAD+////AQACAAAAAAD/////AQADAAAAAAAAAP//AQAAAAAAABD8/wAAAQADAAEAAAD+/wAAAQADAAEAAAAAAAAAAQADAAEAAAAHAAUAAQADAAMAAAAFAP7/AQADAAMAAAAIAAIAAQAAAAIAAAAFAAEAAQAAAAIAAAAJAP3/AQABAAIAAAAJAAYAAQABAAIAAAAIAAYAAQAAAAIAAAAFAAMAAQACAAIAAAAIAAAAAQACAAIAAAAHAAAAAQADAAIAAAAJAAMAAQACAAIAAAAHAAcAAQACAAIAAAACAPv/AgACAAYAAAACAPz/AgACAAcAAAADAPv/AgADAAYAAAADAPz/AgADAAcAAAD+/wIAAQACAAEAAAD+/wUAAQACAAEAAAD//wUAAQADAAEAAAD9/wUAAQADAAEAAAD9/wIAAQADAAEAAAD//wIAAQADAAEAAAA=")
+tile_set = ExtResource("1_mtvav")
+
+[node name="Walls" type="TileMapLayer" parent="." unique_id=1714563237]
+tile_map_data = PackedByteArray("AAAJAPz/AgACAAMAAAAIAPz/AgACAAMAAAAHAPz/AgADAAMAAAAGAPz/AgADAAMAAAAFAPz/AgACAAMAAAAEAPz/AgACAAMAAAADAPz/AgADAAMAAAACAPz/AgACAAMAAAABAPz/AgACAAMAAAAAAPz/AgADAAMAAAD///z/AgADAAMAAAD+//z/AgACAAMAAAD9//z/AgADAAMAAAD8//z/AgADAAMAAAAJAPv/AgACAAIAAAAIAPv/AgACAAIAAAAHAPv/AgACAAIAAAAGAPv/AgADAAIAAAAFAPv/AgADAAIAAAAEAPv/AgADAAIAAAADAPv/AgADAAIAAAACAPv/AgACAAIAAAABAPv/AgACAAIAAAAAAPv/AgACAAIAAAD///v/AgADAAIAAAD+//v/AgACAAIAAAD9//v/AgACAAIAAAD8//v/AgACAAIAAAAKAPv/AgAEAAIAAAAKAPz/AgAEAAMAAAAKAP3/AgAEAAMAAAAKAP7/AgAEAAMAAAAKAP//AgAEAAMAAAAKAAAAAgAEAAMAAAAKAAEAAgAEAAMAAAAKAAIAAgAEAAMAAAAKAAMAAgAEAAMAAAAKAAQAAgAEAAMAAAAKAAUAAgAEAAMAAAAKAAYAAgAEAAMAAAAKAAcAAgAEAAMAAAAJAAgAAgADAAQAAAAIAAgAAgADAAQAAAAHAAgAAgADAAQAAAAGAAgAAgADAAQAAAAFAAgAAgADAAQAAAAEAAgAAgADAAQAAAADAAgAAgADAAQAAAAAAAgAAgAAAAQAAAD//wgAAgADAAQAAAD+/wgAAgADAAQAAAD9/wgAAgADAAQAAAD8/wgAAgADAAQAAAAKAAgAAgAEAAQAAAD7/wcAAgAEAAMAABD7/wYAAgAEAAMAABD7/wgAAgAEAAQAABD7/wUAAgAEAAMAABD7/wQAAgAEAAMAABD7/wMAAgAEAAMAABD7/wIAAgAEAAMAABD7/wEAAgAEAAMAABD7/wAAAgAEAAMAABD7////AgAEAAMAABD7//7/AgAEAAMAABD7//3/AgAEAAMAABD7//z/AgAEAAMAABD7//v/AgAEAAIAABACAAgAAgAAAAQAABA=")
+tile_set = ExtResource("1_mtvav")
+
+[node name="Top" type="TileMapLayer" parent="." unique_id=1791347328]
+tile_map_data = PackedByteArray("AAACAPv/AgACAAYAAAACAPz/AgACAAcAAAADAPv/AgADAAYAAAADAPz/AgADAAcAAAA=")
+tile_set = ExtResource("1_mtvav")
+
+[node name="UnWalkable" type="TileMapLayer" parent="." unique_id=1833547857]
+visible = false
+tile_map_data = PackedByteArray("AAD//wUAAAABAAAAAAD+/wUAAAABAAAAAAD9/wUAAAABAAAAAAD//wIAAAABAAAAAAD+/wIAAAABAAAAAAD9/wIAAAABAAAAAAD8/wAAAAABAAAAAAD+/wAAAAABAAAAAAAAAAAAAAABAAAAAAAFAAMAAAABAAAAAAAFAAEAAAABAAAAAAAAAP//AAABAAAAAAD/////AAABAAAAAAD+////AAABAAAAAAD9////AAABAAAAAAD8////AAABAAAAAAD7/wcAAAABAAAAAAD7/wYAAAABAAAAAAD7/wUAAAABAAAAAAD7/wQAAAABAAAAAAD7/wMAAAABAAAAAAD7/wIAAAABAAAAAAD7/wEAAAABAAAAAAD7/wAAAAABAAAAAAD7////AAABAAAAAAD7//7/AAABAAAAAAD7//3/AAABAAAAAAD7//z/AAABAAAAAAD7//v/AAABAAAAAAD7//r/AAABAAAAAAD8//r/AAABAAAAAAD9//r/AAABAAAAAAD+//r/AAABAAAAAAD///r/AAABAAAAAAAAAPr/AAABAAAAAAABAPr/AAABAAAAAAACAPr/AAABAAAAAAADAPr/AAABAAAAAAAEAPr/AAABAAAAAAAFAPr/AAABAAAAAAAGAPr/AAABAAAAAAAHAPr/AAABAAAAAAAIAPr/AAABAAAAAAAJAPr/AAABAAAAAAAKAPr/AAABAAAAAAAJAPz/AAABAAAAAAAIAPz/AAABAAAAAAAHAPz/AAABAAAAAAAGAPz/AAABAAAAAAAFAPz/AAABAAAAAAAEAPz/AAABAAAAAAADAPz/AAABAAAAAAACAPz/AAABAAAAAAABAPz/AAABAAAAAAAAAPz/AAABAAAAAAD///z/AAABAAAAAAD+//z/AAABAAAAAAD9//z/AAABAAAAAAD8//z/AAABAAAAAAD8//v/AAABAAAAAAD9//v/AAABAAAAAAD+//v/AAABAAAAAAD///v/AAABAAAAAAAAAPv/AAABAAAAAAABAPv/AAABAAAAAAACAPv/AAABAAAAAAADAPv/AAABAAAAAAAEAPv/AAABAAAAAAAFAPv/AAABAAAAAAAGAPv/AAABAAAAAAAHAPv/AAABAAAAAAAIAPv/AAABAAAAAAAJAPv/AAABAAAAAAAKAPv/AAABAAAAAAAKAPz/AAABAAAAAAAKAP3/AAABAAAAAAAKAP7/AAABAAAAAAAKAP//AAABAAAAAAAKAAAAAAABAAAAAAAKAAEAAAABAAAAAAAKAAIAAAABAAAAAAAKAAMAAAABAAAAAAAKAAQAAAABAAAAAAAKAAUAAAABAAAAAAAKAAYAAAABAAAAAAAKAAcAAAABAAAAAAAKAAgAAAABAAAAAAAJAAgAAAABAAAAAAAIAAgAAAABAAAAAAAHAAgAAAABAAAAAAAGAAgAAAABAAAAAAAFAAgAAAABAAAAAAAEAAgAAAABAAAAAAADAAgAAAABAAAAAAAAAAgAAAABAAAAAAD//wgAAAABAAAAAAD+/wgAAAABAAAAAAD9/wgAAAABAAAAAAD8/wgAAAABAAAAAAD7/wgAAAABAAAAAAAIAAYAAAABAAAAAAAJAAYAAAABAAAAAAAHAAcAAAABAAAAAAAHAAUAAAABAAAAAAAJAAMAAAABAAAAAAAFAP7/AAABAAAAAAAHAAAAAAABAAAAAAAIAAAAAAABAAAAAAAJAP3/AAABAAAAAAAIAAIAAAABAAAAAAALAPr/AAABAAAAAAALAPv/AAABAAAAAAALAPz/AAABAAAAAAALAP3/AAABAAAAAAALAP7/AAABAAAAAAALAP//AAABAAAAAAALAAAAAAABAAAAAAALAAEAAAABAAAAAAALAAIAAAABAAAAAAALAAMAAAABAAAAAAAFAAkAAAABAAAAAAAEAAkAAAABAAAAAAAGAAkAAAABAAAAAAAHAAkAAAABAAAAAAAIAAkAAAABAAAAAAAJAAkAAAABAAAAAAAKAAkAAAABAAAAAAADAAkAAAABAAAAAAACAAkAAAABAAAAAAABAAkAAAABAAAAAAAAAAkAAAABAAAAAAD7/wkAAAABAAAAAAD8/wkAAAABAAAAAAD9/wkAAAABAAAAAAD+/wkAAAABAAAAAAD//wkAAAABAAAAAAACAAgAAAABAAAAAAA=")
+tile_set = ExtResource("1_mtvav")
+
+[node name="Destinations" type="Node2D" parent="." unique_id=1271545613]
+
+[node name="BarChair1" type="Marker2D" parent="Destinations" unique_id=722709510]
+position = Vector2(-115, 14)
+
+[node name="BarChair2" type="Marker2D" parent="Destinations" unique_id=291557055]
+position = Vector2(-49, 15)
+
+[node name="BarChair7" type="Marker2D" parent="Destinations" unique_id=1827230573]
+position = Vector2(-18, 174)
+
+[node name="BarChair3" type="Marker2D" parent="Destinations" unique_id=1842702122]
+position = Vector2(18, 15)
+
+[node name="BarChair4" type="Marker2D" parent="Destinations" unique_id=1026936261]
+position = Vector2(-16, 79)
+
+[node name="BarChair5" type="Marker2D" parent="Destinations" unique_id=992989187]
+position = Vector2(-80, 79)
+
+[node name="BarChair6" type="Marker2D" parent="Destinations" unique_id=1295758142]
+position = Vector2(-82, 174)
+
+[node name="Visitor" type="Node2D" parent="." unique_id=1979695203]
+position = Vector2(48, 271)
+script = ExtResource("3_i0tqs")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Visitor" unique_id=1119764802]
+mesh = SubResource("CapsuleMesh_s0jpr")
+metadata/_edit_lock_ = true
+
+[node name="Character" type="CharacterBody2D" parent="." unique_id=1683038411]
+position = Vector2(104, -64)
+script = ExtResource("2_v3g5v")
+
+[node name="Sprite2D" type="Sprite2D" parent="Character" unique_id=740207782]
+texture = ExtResource("2_1pkq2")
+flip_h = true
+hframes = 4
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Character" unique_id=626597721]
+position = Vector2(0, 7)
+shape = SubResource("CapsuleShape2D_v3g5v")
+
+[node name="Camera2D" type="Camera2D" parent="Character" unique_id=345326109]
+zoom = Vector2(3.485, 3.485)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Character" unique_id=636402606]
+libraries/ = SubResource("AnimationLibrary_q1hja")
+speed_scale = 0.3
