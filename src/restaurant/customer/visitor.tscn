@@ -34,7 +34,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_psgjv"]
-resource_name = "still"
+resource_name = "idle"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -167,7 +167,7 @@ tracks/1/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_psgjv"]
 _data = {
 &"RESET": SubResource("Animation_51pda"),
-&"still": SubResource("Animation_psgjv"),
+&"idle": SubResource("Animation_psgjv"),
 &"walkB": SubResource("Animation_vkvmr"),
 &"walkF": SubResource("Animation_ppaat"),
 &"walkL": SubResource("Animation_vok85"),
@@ -191,7 +191,7 @@ vframes = 6
 [node name="StateMachine" type="Node" parent="." unique_id=1052221811]
 script = ExtResource("3_51pda")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=413129502]
+[node name="Indicator" type="TextureProgressBar" parent="." unique_id=413129502]
 offset_left = 4.0
 offset_top = -46.0
 offset_right = 23.0

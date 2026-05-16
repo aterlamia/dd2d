@@ -84,7 +84,7 @@ tracks/5/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_6h7lm"]
-resource_name = "WalkB"
+resource_name = "walkB"
 length = 0.13333334
 loop_mode = 1
 tracks/0/type = "value"
@@ -137,7 +137,7 @@ tracks/3/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_pp8ob"]
-resource_name = "WalkF"
+resource_name = "walkF"
 length = 0.13333334
 loop_mode = 1
 tracks/0/type = "value"
@@ -190,7 +190,7 @@ tracks/3/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_i0tqs"]
-resource_name = "WalkL"
+resource_name = "walkL"
 length = 0.26666668
 loop_mode = 1
 tracks/0/type = "value"
@@ -255,7 +255,7 @@ tracks/4/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_4h5jk"]
-resource_name = "WalkR"
+resource_name = "walkR"
 length = 0.26666668
 loop_mode = 1
 tracks/0/type = "value"
@@ -385,10 +385,10 @@ tracks/4/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q1hja"]
 _data = {
 &"RESET": SubResource("Animation_v3g5v"),
-&"WalkB": SubResource("Animation_6h7lm"),
-&"WalkF": SubResource("Animation_pp8ob"),
-&"WalkL": SubResource("Animation_i0tqs"),
-&"WalkR": SubResource("Animation_4h5jk"),
+&"walkB": SubResource("Animation_6h7lm"),
+&"walkF": SubResource("Animation_pp8ob"),
+&"walkL": SubResource("Animation_i0tqs"),
+&"walkR": SubResource("Animation_4h5jk"),
 &"idle": SubResource("Animation_fb16x")
 }
 
@@ -406,7 +406,7 @@ position = Vector2(0, 7)
 shape = SubResource("CapsuleShape2D_v3g5v")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=286982120]
-zoom = Vector2(3.485, 3.485)
+zoom = Vector2(3.335, 3.335)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1372672939]
 libraries/ = SubResource("AnimationLibrary_q1hja")

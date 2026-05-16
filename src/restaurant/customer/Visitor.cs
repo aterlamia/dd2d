@@ -4,72 +4,60 @@ using Godot;
 
 namespace dd2d.restaurant.customer
 {
-    public partial class Visitor : Node2D
-    {
-        private float _speed = 60f;
-        private Node _destinations;
-        private Random _random;
-        private core.Navigation.Navigator _navigator;
-        private core.StateMachine.CustomerStateMachine _stateMachine;
+	public partial class Visitor : Node2D
+	{
+		[Signal] public delegate void VisitCompletedEventHandler();
 
-        private Vector2 _actualDestination = Vector2.Zero;
-        private Vector2 _navDestination = Vector2.Zero;
-        private Vector2 _startPosition = Vector2.Zero;
+		[Export] public core.Navigation.Navigator Navigator { get; set; }
+		[Export] public Node Destinations { get; set; }
+		[Export] public CustomerData Data { get; set; }
 
-        public override void _Ready()
-        {
-            _navigator = GetParent().GetNode<core.Navigation.Navigator>("Navigator");
-            _destinations = GetParent().GetNode("Destinations");
-            _random = new Random((int)DateTime.Now.Ticks);
-            _startPosition = GlobalPosition;
+		private core.StateMachine.CustomerStateMachine _stateMachine;
+		private readonly Random _random = new();
 
-            _stateMachine = new core.StateMachine.CustomerStateMachine();
-            AddChild(_stateMachine);
-            _stateMachine.Init(this);
+		public override void _Ready()
+		{
+			if (Navigator == null)
+			{
+				GD.PushError("[Visitor] Navigator is not assigned!");
+				return;
+			}
+			if (Destinations == null)
+			{
+				GD.PushError("[Visitor] Destinations is not assigned!");
+				return;
+			}
 
-            // Defer until all sibling nodes (including Navigator) have finished _Ready()
-            CallDeferred(nameof(WalkToRandomDestination));
-        }
+			_stateMachine = new core.StateMachine.CustomerStateMachine();
+			AddChild(_stateMachine);
+			_stateMachine.Init(this);
 
-        public void WalkTo(Vector2 targetPosition, Action onArrived = null)
-        {
-            _navDestination = targetPosition;
-            var path = _navigator.GetPath(GlobalPosition, targetPosition);
-            if (path.Length == 0)
-                return;
-            _stateMachine.StartWalking(_speed, path, onArrived);
-        }
+			// Deferred so VisitorManager has time to set GlobalPosition before we start
+			CallDeferred(nameof(WalkToRandomDestination));
+		}
 
-        public void WalkToRandomDestination()
-        {
-            if (_destinations == null || _destinations.GetChildCount() == 0)
-                return;
-            var markers = _destinations.GetChildren().OfType<Marker2D>().ToList();
-            if (markers.Count == 0)
-                return;
-            markers = markers.OrderBy(_ => _random.Next()).ToList();
-            int idx = _random.Next(markers.Count);
-            _actualDestination = markers[idx].GlobalPosition;
-            WalkTo(_actualDestination, OnArrivedAtDestination);
-        }
+		public void WalkToRandomDestination()
+		{
+			var startPosition = GlobalPosition;
 
-        private void OnArrivedAtDestination()
-        {
-            GlobalPosition = _actualDestination;
-            _stateMachine.StartSeated(10.0f, OnWaitFinished);
-        }
+			var markers = Destinations.GetChildren().OfType<Marker2D>().ToList();
+			if (markers.Count == 0)
+				return;
 
-        private void OnWaitFinished()
-        {
-            GlobalPosition = _navDestination;
-            var path = _navigator.GetPath(GlobalPosition, _startPosition);
-            _stateMachine.StartLeaving(_speed, path);
-        }
+			var destination = markers[_random.Next(markers.Count)];
+			var walkPath   = Navigator.GetPath(GlobalPosition, destination.GlobalPosition);
+			var returnPath = Navigator.GetPath(destination.GlobalPosition, startPosition);
+			if (walkPath.Length == 0)
+				return;
 
-        public override void _Process(double delta)
-        {
-            if (Input.IsActionJustPressed("ui_select"))
-                WalkToRandomDestination();
-        }
-    }
+			float speed    = Data?.Speed ?? 60f;
+			float patience = Data?.Patience ?? 10f;
+
+			_stateMachine.BeginVisit(speed, walkPath, destination.GlobalPosition, patience, returnPath, () =>
+			{
+				GD.Print("[Visitor] Visit complete");
+				EmitSignal(SignalName.VisitCompleted);
+			});
+		}
+	}
 }

@@ -45,41 +45,46 @@ namespace dd2d.core.Navigation
         {
             Vector2I startCell = _unwalkableTileMap.LocalToMap(from);
             Vector2I endCell = _unwalkableTileMap.LocalToMap(to);
-            // If the end cell is not walkable, try below, then spiral
-            if (_astarGrid.IsPointSolid(endCell))
-            {
-                Vector2I below = new Vector2I(endCell.X, endCell.Y + 1);
-                if (_astarGrid.IsInBounds(below.X, below.Y) && !_astarGrid.IsPointSolid(below))
-                {
-                    endCell = below;
-                }
-                else
-                {
-                    int maxRadius = 5;
-                    bool found = false;
-                    for (int r = 1; r <= maxRadius && !found; r++)
-                    {
-                        for (int dx = -r; dx <= r && !found; dx++)
-                        {
-                            for (int dy = -r; dy <= r && !found; dy++)
-                            {
-                                if (Math.Abs(dx) != r && Math.Abs(dy) != r) continue;
-                                Vector2I candidate = new Vector2I(endCell.X + dx, endCell.Y + dy);
-                                if (_astarGrid.IsInBounds(candidate.X, candidate.Y) && !_astarGrid.IsPointSolid(candidate))
-                                {
-                                    endCell = candidate;
-                                    found = true;
-                                }
-                            }
-                        }
-                    }
-                    if (!found) return Array.Empty<Vector2>();
-                }
-            }
-            if (!_astarGrid.IsInBounds(startCell.X, startCell.Y) || !_astarGrid.IsInBounds(endCell.X, endCell.Y) || _astarGrid.IsPointSolid(startCell))
+
+            startCell = FindWalkableCell(startCell);
+            endCell = FindWalkableCell(endCell);
+
+            if (startCell == new Vector2I(int.MinValue, int.MinValue) || endCell == new Vector2I(int.MinValue, int.MinValue))
                 return Array.Empty<Vector2>();
+
+            if (!_astarGrid.IsInBounds(startCell.X, startCell.Y) || !_astarGrid.IsInBounds(endCell.X, endCell.Y))
+                return Array.Empty<Vector2>();
+
             var cellPath = _astarGrid.GetIdPath(startCell, endCell);
             return cellPath.Select(cell => _unwalkableTileMap.MapToLocal(cell)).ToArray();
+        }
+
+        private Vector2I FindWalkableCell(Vector2I cell)
+        {
+            if (_astarGrid.IsInBounds(cell.X, cell.Y) && !_astarGrid.IsPointSolid(cell))
+                return cell;
+
+            // Try cell below first, then spiral outward
+            Vector2I below = new Vector2I(cell.X, cell.Y + 1);
+            if (_astarGrid.IsInBounds(below.X, below.Y) && !_astarGrid.IsPointSolid(below))
+                return below;
+
+            int maxRadius = 5;
+            for (int r = 1; r <= maxRadius; r++)
+            {
+                for (int dx = -r; dx <= r; dx++)
+                {
+                    for (int dy = -r; dy <= r; dy++)
+                    {
+                        if (Math.Abs(dx) != r && Math.Abs(dy) != r) continue;
+                        Vector2I candidate = new Vector2I(cell.X + dx, cell.Y + dy);
+                        if (_astarGrid.IsInBounds(candidate.X, candidate.Y) && !_astarGrid.IsPointSolid(candidate))
+                            return candidate;
+                    }
+                }
+            }
+
+            return new Vector2I(int.MinValue, int.MinValue);
         }
     }
 }

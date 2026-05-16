@@ -3,31 +3,46 @@ using Godot;
 
 namespace dd2d.core.StateMachine.Customer
 {
-    public partial class SeatedState : Node
-    {
-        private restaurant.customer.Visitor _visitor;
-        private float _waitTime;
-        private Action _onWaitFinished;
-        private Timer _waitTimer;
+	public partial class SeatedState : Node
+	{
+		private Node2D _entity;
+		private Action _onSeated;
+		private AnimationPlayer _animationPlayer;
 
-        public void Init(restaurant.customer.Visitor visitor, float waitTime, Action onWaitFinished)
-        {
-            _visitor = visitor;
-            _waitTime = waitTime;
-            _onWaitFinished = onWaitFinished;
-            _waitTimer = new Timer();
-            _waitTimer.WaitTime = _waitTime;
-            _waitTimer.OneShot = true;
-            _waitTimer.Timeout += OnWaitTimerTimeout;
-            AddChild(_waitTimer);
-            _waitTimer.Start();
-        }
+		public void Init(Node2D entity, Action onSeated)
+		{
+			_entity = entity;
+			_onSeated = onSeated;
+			_animationPlayer = entity.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+			GD.Print("[SeatedState] Sitting down");
 
-        private void OnWaitTimerTimeout()
-        {
-            _onWaitFinished?.Invoke();
-            QueueFree();
-        }
-    }
+			if (_animationPlayer != null && _animationPlayer.HasAnimation(core.AnimationKeys.Sit))
+			{
+				_animationPlayer.Connect(
+					AnimationMixer.SignalName.AnimationFinished,
+					Callable.From<StringName>(OnAnimationFinished),
+					(uint)GodotObject.ConnectFlags.OneShot);
+				_animationPlayer.Play(core.AnimationKeys.Sit);
+			}
+			else
+			{
+				CallDeferred(nameof(Finish));
+			}
+		}
+
+		private void OnAnimationFinished(StringName animName)
+		{
+			if (animName == core.AnimationKeys.Sit)
+				Finish();
+		}
+
+		private void Finish()
+		{
+			GD.Print("[SeatedState] Now seated, starting wait");
+			var cb = _onSeated;
+			_onSeated = null;
+			QueueFree();
+			cb?.Invoke();
+		}
+	}
 }
-

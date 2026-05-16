@@ -15,10 +15,6 @@ run/main_scene="uid://cm17fqimtfmr2"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
-[display]
-
-window/stretch/scale=2.45
-
 [dotnet]
 
 project/assembly_name="dd2d"

@@ -6,48 +6,28 @@ namespace dd2d.player
     {
         public const float Speed = 100.0f;
 
-        private AnimationPlayer _animationPlayer;
-        private string _lastAnimation = "";
+        private core.StateMachine.Player.PlayerStateMachine _stateMachine;
 
         public override void _Ready()
         {
-            _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+            _stateMachine = new core.StateMachine.Player.PlayerStateMachine();
+            AddChild(_stateMachine);
+            _stateMachine.Init(this);
         }
 
-        public override void _PhysicsProcess(double delta)
+        public override void _Process(double delta)
         {
-            Vector2 velocity = Velocity;
+            if (_stateMachine.CurrentState == core.StateMachine.Player.PlayerStateType.Interacting)
+                return;
 
             Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-            velocity = direction * Speed;
-            UpdateAnimation(direction);
-            Velocity = velocity;
-            MoveAndSlide();
+            if (direction != Vector2.Zero && _stateMachine.CurrentState != core.StateMachine.Player.PlayerStateType.Walking)
+                _stateMachine.SetWalking();
+            else if (direction == Vector2.Zero && _stateMachine.CurrentState != core.StateMachine.Player.PlayerStateType.Idle)
+                _stateMachine.SetIdle();
         }
 
-        private void UpdateAnimation(Vector2 direction)
-        {
-            string anim;
-
-            if (direction == Vector2.Zero)
-                anim = "idle";
-            else if (direction.Y > 0)
-                anim = "WalkF";
-            else if (direction.Y < 0)
-                anim = "WalkB";
-            else if (direction.X < 0)
-                anim = "WalkL";
-            else if (direction.X > 0)
-                anim = "WalkR";
-            else
-                anim = "idle";
-
-            if (anim != _lastAnimation)
-            {
-                _lastAnimation = anim;
-                _animationPlayer.Play(anim);
-            }
-        }
+        public void Interact(System.Action onDone = null) => _stateMachine.SetInteracting(onDone);
     }
 }
 

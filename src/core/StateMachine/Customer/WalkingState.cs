@@ -3,62 +3,68 @@ using Godot;
 
 namespace dd2d.core.StateMachine.Customer
 {
-    public partial class WalkingState : Node
-    {
-        private restaurant.customer.Visitor _visitor;
-        private AnimationPlayer _animationPlayer;
-        private float _speed;
-        private Vector2[] _path = Array.Empty<Vector2>();
-        private int _pathIndex = 0;
-        private Action _onArrived;
+	public partial class WalkingState : Node
+	{
+		private Node2D _entity;
+		private AnimationPlayer _animationPlayer;
+		private float _speed;
+		private Vector2[] _path = Array.Empty<Vector2>();
+		private int _pathIndex = 0;
+		private Action _onArrived;
+		private bool _finished = false;
 
-        public void Init(restaurant.customer.Visitor visitor, float speed, Vector2[] path, Action onArrived)
-        {
-            _visitor = visitor;
-            _animationPlayer = visitor.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-            _speed = speed;
-            _path = path;
-            _pathIndex = 0;
-            _onArrived = onArrived;
-        }
+		public void Init(Node2D entity, float speed, Vector2[] path, Action onArrived)
+		{
+			_entity = entity;
+			_animationPlayer = entity.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+			_speed = speed;
+			_path = path;
+			_pathIndex = 0;
+			_onArrived = onArrived;
+			GD.Print($"[WalkingState] Init — path length: {path.Length}");
+		}
 
-        private void PlayAnimation(Vector2 direction)
-        {
-            if (_animationPlayer == null) return;
-            string anim;
-            if (direction == Vector2.Zero)
-                anim = "still";
-            else if (Mathf.Abs(direction.X) >= Mathf.Abs(direction.Y))
-                anim = direction.X > 0 ? "walkR" : "walkL";
-            else
-                anim = direction.Y > 0 ? "walkF" : "walkB";
+		private void PlayAnimation(Vector2 direction)
+		{
+			if (_animationPlayer == null) return;
+			string anim;
+			if (direction == Vector2.Zero)
+				anim = core.AnimationKeys.Idle;
+			else if (Mathf.Abs(direction.X) >= Mathf.Abs(direction.Y))
+				anim = direction.X > 0 ? core.AnimationKeys.WalkRight : core.AnimationKeys.WalkLeft;
+			else
+				anim = direction.Y > 0 ? core.AnimationKeys.WalkForward : core.AnimationKeys.WalkBack;
 
-            if (_animationPlayer.CurrentAnimation != anim)
-                _animationPlayer.Play(anim);
-        }
+			if (_animationPlayer.CurrentAnimation != anim)
+				_animationPlayer.Play(anim);
+		}
 
-        public override void _Process(double delta)
-        {
-            if (_path.Length == 0 || _pathIndex >= _path.Length)
-            {
-                PlayAnimation(Vector2.Zero);
-                _onArrived?.Invoke();
-                QueueFree();
-                return;
-            }
-            Vector2 nextPos = _path[_pathIndex];
-            Vector2 direction = (nextPos - _visitor.GlobalPosition).Normalized();
-            float distance = _speed * (float)delta;
-            PlayAnimation(direction);
-            if (_visitor.GlobalPosition.DistanceTo(nextPos) > distance)
-            {
-                _visitor.GlobalPosition += direction * distance;
-            }
-            else
-            {
-                _visitor.GlobalPosition = nextPos;
-                _pathIndex++;
-            }
-        }
-    }
+		public override void _Process(double delta)
+		{
+			if (_finished) return;
+
+			if (_path.Length == 0 || _pathIndex >= _path.Length)
+			{
+				_finished = true;
+				PlayAnimation(Vector2.Zero);
+				GD.Print("[WalkingState] Arrived at destination");
+				var cb = _onArrived;
+				_onArrived = null;
+				QueueFree();
+				cb?.Invoke();
+				return;
+			}
+			Vector2 nextPos = _path[_pathIndex];
+			Vector2 direction = (nextPos - _entity.GlobalPosition).Normalized();
+			float distance = _speed * (float)delta;
+			PlayAnimation(direction);
+			if (_entity.GlobalPosition.DistanceTo(nextPos) > distance)
+				_entity.GlobalPosition += direction * distance;
+			else
+			{
+				_entity.GlobalPosition = nextPos;
+				_pathIndex++;
+			}
+		}
+	}
 }
