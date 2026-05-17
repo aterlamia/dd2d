@@ -9,4 +9,9 @@
     <!-- Exclude the unit test project from the game build -->
     <Compile Remove="test/**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="src\restaurant\table\Table.tscn" />
+    <Content Include="src\restaurant\table\Table1Chair.tscn" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource path="res://src/restaurant/table/Chair.cs" type="Script" id=1]
+[ext_resource path="res://src/restaurant/table/Table.cs" type="Script" id=2]
+
+[node name="Table" type="Node2D"]
+position = Vector2(64, 64)
+script = ExtResource( 2 )
+
+[node name="Chair1" type="Node2D" parent="."]
+position = Vector2(0, 0)
+script = ExtResource( 1 )
