@@ -1,5 +1,5 @@
 using Godot;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace dd2d.restaurant.table
 {
@@ -20,6 +20,10 @@ namespace dd2d.restaurant.table
         public int ChairTileSetId { get; set; } = 0;
         [Export]
         public Godot.Collections.Array<ChairResource> Chairs { get; set; } = new();
+
+        public int TotalSeats => Chairs.Count;
+        public bool IsOccupied => Chairs.Any(c => c.IsOccupied);
+        public int FreeSeatCount => IsOccupied ? 0 : TotalSeats;
 
         public static TableResource FromDictionary(Godot.Collections.Dictionary tableDict)
         {
