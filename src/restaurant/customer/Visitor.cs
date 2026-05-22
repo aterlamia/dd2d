@@ -12,6 +12,8 @@ namespace dd2d.restaurant.customer
 		[Export] public core.Navigation.Navigator Navigator { get; set; }
 		[Export] public CustomerData Data { get; set; }
 		public ISeatingSpot AssignedSeat { get; set; }
+		public int PartyId { get; set; } = -1;
+		public Action OnPatienceExpired { get; set; }
 
 		private core.StateMachine.CustomerStateMachine _stateMachine;
 		private readonly Random _random = new();
@@ -67,7 +69,14 @@ namespace dd2d.restaurant.customer
 			{
 				Log.Info("Visit complete", "Visitor");
 				EmitSignal(SignalName.VisitCompleted);
-			});
+			},
+			OnPatienceExpired
+			);
+		}
+
+		public void ContinueAfterWaiting()
+		{
+			_stateMachine.ProceedFromWaiting();
 		}
 	}
 }
