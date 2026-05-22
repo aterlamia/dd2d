@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using System.Collections.Generic;
+using dd2d.restaurant.kitchen;
 using dd2d.core;
 
 namespace dd2d.restaurant
@@ -16,6 +17,7 @@ namespace dd2d.restaurant
 		[Export] public float PartySpawnDelay { get; set; } = 0.8f;
 		[Export] public Marker2D EntryPoint { get; set; }
 		[Export] public core.Navigation.Navigator Navigator { get; set; }
+		[Export] public kitchen.KitchenManager Kitchen { get; set; }
 		[Export] public NodePath FurnitureLayerPath { get; set; }
 
 		internal int _activeVisitors = 0;
@@ -157,6 +159,7 @@ namespace dd2d.restaurant
 		{
 			var visitor = VisitorScene.Instantiate<customer.Visitor>();
 			visitor.Navigator = Navigator;
+			visitor.Kitchen = Kitchen;
 			visitor.GlobalPosition = EntryPoint.GlobalPosition;
 			visitor.Data = new customer.CustomerData();
 			visitor.Data.Patience = (float)(_random.NextDouble() * (MaxPatience - MinPatience) + MinPatience);

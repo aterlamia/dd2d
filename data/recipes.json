@@ -1,0 +1,34 @@
+{
+  "recipes": [
+    {
+      "name": "Burger",
+      "base_quality": 2,
+      "difficulty": 1,
+      "preparation_time": 15
+    },
+    {
+      "name": "Salad",
+      "base_quality": 3,
+      "difficulty": 2,
+      "preparation_time": 10
+    },
+    {
+      "name": "Pasta",
+      "base_quality": 4,
+      "difficulty": 3,
+      "preparation_time": 25
+    },
+    {
+      "name": "Pizza",
+      "base_quality": 4,
+      "difficulty": 4,
+      "preparation_time": 30
+    },
+    {
+      "name": "Steak",
+      "base_quality": 5,
+      "difficulty": 5,
+      "preparation_time": 45
+    }
+  ]
+}

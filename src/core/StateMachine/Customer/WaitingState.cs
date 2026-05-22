@@ -49,6 +49,18 @@ namespace dd2d.core.StateMachine.Customer
 
 		public float GetRemainingPatience() => (float)_patienceTimer.TimeLeft;
 
+		public void AddPatience(float extraTime)
+		{
+			float remaining = (float)_patienceTimer.TimeLeft;
+			_patience += extraTime;
+			_patienceTimer.Start(remaining + extraTime);
+			if (_indicator != null)
+			{
+				_indicator.MaxValue = _patience;
+				_indicator.Value = remaining + extraTime;
+			}
+		}
+
 		private void OnPatienceExpired()
 		{
 			Log.Info("Patience expired!", "WaitingState");

@@ -25,7 +25,7 @@ namespace dd2d.core.StateMachine
 
 		// Queues up the full visit sequence and starts it.
 		// Cancel at any time with CancelSequence().
-		public void BeginVisit(float speed, Vector2[] walkPath, Vector2 seatPosition, float patience, Vector2[] returnPath, ISeatingSpot seat, Action onComplete = null, Action onPatienceExpired = null)
+		public void BeginVisit(float speed, Vector2[] walkPath, Vector2 seatPosition, float patience, Vector2[] returnPath, ISeatingSpot seat, Action onComplete = null, Action onPatienceExpired = null, Action onSeated = null)
 		{
 			Log.Debug("BeginVisit started", "CustomerStateMachine");
 			_assignedSeat = seat;
@@ -37,7 +37,11 @@ namespace dd2d.core.StateMachine
 			_sequence.Enqueue(() =>
 			{
 				_entity.GlobalPosition = seatPosition;
-				StartSeated(AdvanceQueue);
+				StartSeated(() =>
+				{
+					onSeated?.Invoke();
+					AdvanceQueue();
+				});
 			});
 			_sequence.Enqueue(() => StartWaiting(patience, patienceCallback));
 			_sequence.Enqueue(() =>
@@ -122,6 +126,12 @@ namespace dd2d.core.StateMachine
 		public void ProceedFromWaiting()
 		{
 			AdvanceQueue();
+		}
+
+		public void FoodArrived(float patienceBonus)
+		{
+			if (_activeState is Customer.WaitingState waiting)
+				waiting.AddPatience(patienceBonus);
 		}
 
 		private void AdvanceQueue()

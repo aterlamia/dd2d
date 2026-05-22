@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using dd2d.restaurant.table;
+using dd2d.restaurant.kitchen;
 using dd2d.core;
 
 namespace dd2d.restaurant.customer
@@ -11,12 +12,15 @@ namespace dd2d.restaurant.customer
 
 		[Export] public core.Navigation.Navigator Navigator { get; set; }
 		[Export] public CustomerData Data { get; set; }
+		[Export] public kitchen.KitchenManager Kitchen { get; set; }
+		[Export] public float PatienceBonus { get; set; } = 15f;
 		public ISeatingSpot AssignedSeat { get; set; }
 		public int PartyId { get; set; } = -1;
 		public Action OnPatienceExpired { get; set; }
 
 		private core.StateMachine.CustomerStateMachine _stateMachine;
 		private readonly Random _random = new();
+		private kitchen.Order _currentOrder;
 
 		public override void _Ready()
 		{
@@ -70,8 +74,35 @@ namespace dd2d.restaurant.customer
 				Log.Info("Visit complete", "Visitor");
 				EmitSignal(SignalName.VisitCompleted);
 			},
-			OnPatienceExpired
+			OnPatienceExpired,
+			OnSeated
 			);
+		}
+
+		private void OnSeated()
+		{
+			_ = PlaceOrder();
+		}
+
+		private kitchen.Order PlaceOrder()
+		{
+			if (Kitchen == null) return null;
+
+			var order = Kitchen.PlaceOrder(this);
+			_currentOrder = order;
+
+			kitchen.Order captured = order;
+			void Handler(kitchen.Order completed)
+			{
+				if (completed == captured)
+				{
+					_stateMachine.FoodArrived(PatienceBonus);
+					Log.Debug($"Food arrived: {completed.Result.Recipe.ItemName} (quality {completed.Result.FinalQuality:F1})", "Visitor");
+					Kitchen.OrderCompleted -= Handler;
+				}
+			}
+			Kitchen.OrderCompleted += Handler;
+			return order;
 		}
 
 		public void ContinueAfterWaiting()
