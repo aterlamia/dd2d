@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using dd2d.core;
 
 namespace dd2d.core.StateMachine.Customer
 {
@@ -50,7 +51,7 @@ namespace dd2d.core.StateMachine.Customer
 
 		private void OnPatienceExpired()
 		{
-			GD.Print("[WaitingState] Patience expired!");
+			Log.Info("Patience expired!", "WaitingState");
 			if (_indicator != null)
 				_indicator.Visible = false;
 			_onPatienceExpired?.Invoke();

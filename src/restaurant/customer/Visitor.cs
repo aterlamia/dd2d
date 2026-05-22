@@ -1,5 +1,7 @@
 using System;
 using Godot;
+using dd2d.restaurant.table;
+using dd2d.core;
 
 namespace dd2d.restaurant.customer
 {
@@ -9,6 +11,7 @@ namespace dd2d.restaurant.customer
 
 		[Export] public core.Navigation.Navigator Navigator { get; set; }
 		[Export] public CustomerData Data { get; set; }
+		public ISeatingSpot AssignedSeat { get; set; }
 
 		private core.StateMachine.CustomerStateMachine _stateMachine;
 		private readonly Random _random = new();
@@ -28,35 +31,41 @@ namespace dd2d.restaurant.customer
 
 		public void WalkToDestination(Vector2 destination)
 		{
-			GD.Print($"[Visitor] WalkToDestination called. Data assigned: {Data != null}, Navigator assigned: {Navigator != null}, Destination: {destination}");
+			Log.Debug($"WalkToDestination called. Data assigned: {Data != null}, Navigator assigned: {Navigator != null}, Destination: {destination}", "Visitor");
 			if (Data == null)
 			{
-				GD.PushError("[Visitor] CustomerData is not assigned!");
+				Log.Error("CustomerData is not assigned!", "Visitor");
 				return;
 			}
 			if (Navigator == null)
 			{
-				GD.PushError("[Visitor] Navigator is not assigned!");
+				Log.Error("Navigator is not assigned!", "Visitor");
 				return;
 			}
 			var startPosition = GlobalPosition;
 			var walkPath = Navigator.GetPath(GlobalPosition, destination);
 			var returnPath = Navigator.GetPath(destination, startPosition);
-			GD.Print($"[Visitor] walkPath length: {walkPath.Length}, returnPath length: {returnPath.Length}");
+			Log.Debug($"walkPath length: {walkPath.Length}, returnPath length: {returnPath.Length}", "Visitor");
 			if (walkPath.Length == 0)
+			{
+				Log.Error("No path to destination!", "Visitor");
+				EmitSignal(SignalName.VisitCompleted);
 				return;
+			}
 
 			float speed    = Data.Speed;
 			float patience = Data.Patience;
 
 			_stateMachine.BeginVisit(
-				speed, 
-				walkPath, 
+				speed,
+				walkPath,
 				destination,
 				patience,
-				returnPath, () =>
+				returnPath,
+				AssignedSeat,
+				() =>
 			{
-				GD.Print("[Visitor] Visit complete");
+				Log.Info("Visit complete", "Visitor");
 				EmitSignal(SignalName.VisitCompleted);
 			});
 		}

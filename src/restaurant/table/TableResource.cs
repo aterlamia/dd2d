@@ -1,5 +1,6 @@
 using Godot;
 using System.Linq;
+using dd2d.core;
 
 namespace dd2d.restaurant.table
 {
@@ -28,14 +29,65 @@ namespace dd2d.restaurant.table
         public static TableResource FromDictionary(Godot.Collections.Dictionary tableDict)
         {
             var table = new TableResource();
+
+            if (!tableDict.ContainsKey("position"))
+            {
+                Log.Error("Table JSON missing 'position' key", "TableResource");
+                return null;
+            }
             var posArr = (Godot.Collections.Array)tableDict["position"];
+            if (posArr.Count < 2)
+            {
+                Log.Error("Table 'position' must have at least 2 elements", "TableResource");
+                return null;
+            }
             table.Position = new Vector2I((int)posArr[0], (int)posArr[1]);
+
+            if (!tableDict.ContainsKey("table_tile_coords"))
+            {
+                Log.Error("Table JSON missing 'table_tile_coords' key", "TableResource");
+                return null;
+            }
             var tableTileCoordsArr = (Godot.Collections.Array)tableDict["table_tile_coords"];
+            if (tableTileCoordsArr.Count < 2)
+            {
+                Log.Error("Table 'table_tile_coords' must have at least 2 elements", "TableResource");
+                return null;
+            }
             table.TableTileCoords = new Vector2I((int)tableTileCoordsArr[0], (int)tableTileCoordsArr[1]);
+
+            if (!tableDict.ContainsKey("chair_tile_coords"))
+            {
+                Log.Error("Table JSON missing 'chair_tile_coords' key", "TableResource");
+                return null;
+            }
             var chairTileCoordsArr = (Godot.Collections.Array)tableDict["chair_tile_coords"];
+            if (chairTileCoordsArr.Count < 2)
+            {
+                Log.Error("Table 'chair_tile_coords' must have at least 2 elements", "TableResource");
+                return null;
+            }
             table.ChairTileCoords = new Vector2I((int)chairTileCoordsArr[0], (int)chairTileCoordsArr[1]);
-            table.TableTileSetId = (int)tableDict["table_tile_id"];
-            table.ChairTileSetId = (int)tableDict["chair_tile_id"];
+
+            if (!tableDict.ContainsKey("table_tile_id"))
+            {
+                Log.Error("Table JSON missing 'table_tile_id' key", "TableResource");
+                return null;
+            }
+            table.TableTileSetId = tableDict["table_tile_id"].AsInt32();
+
+            if (!tableDict.ContainsKey("chair_tile_id"))
+            {
+                Log.Error("Table JSON missing 'chair_tile_id' key", "TableResource");
+                return null;
+            }
+            table.ChairTileSetId = tableDict["chair_tile_id"].AsInt32();
+
+            if (!tableDict.ContainsKey("chairs"))
+            {
+                Log.Error("Table JSON missing 'chairs' key", "TableResource");
+                return null;
+            }
             var chairsArr = (Godot.Collections.Array)tableDict["chairs"];
             foreach (string dirStr in chairsArr)
             {

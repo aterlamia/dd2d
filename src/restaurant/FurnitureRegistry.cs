@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using dd2d.core;
 
 namespace dd2d.restaurant
 {

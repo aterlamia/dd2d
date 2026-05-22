@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using dd2d.core;
 
 namespace dd2d.restaurant
 {
@@ -19,22 +20,22 @@ namespace dd2d.restaurant
 		{
 			if (VisitorScene == null)
 			{
-				GD.PrintErr("[VisitorManager] VisitorScene is not set!");
+				Log.Error("VisitorScene is not set!", "VisitorManager");
 				return;
 			}
 			if (EntryPoint == null)
 			{
-				GD.PrintErr("[VisitorManager] EntryPoint is not set!");
+				Log.Error("EntryPoint is not set!", "VisitorManager");
 				return;
 			}
 			if (Navigator == null)
 			{
-				GD.PrintErr("[VisitorManager] Navigator is not set!");
+				Log.Error("Navigator is not set!", "VisitorManager");
 				return;
 			}
 			if (FurnitureRegistry.Instance == null)
 			{
-				GD.PrintErr("[VisitorManager] FurnitureRegistry not found!");
+				Log.Error("FurnitureRegistry not found!", "VisitorManager");
 				return;
 			}
 
@@ -73,30 +74,32 @@ namespace dd2d.restaurant
 
 			if (availableSeats.Count == 0)
 			{
-				GD.Print("[VisitorManager] No available seats.");
+				Log.Info("No available seats.", "VisitorManager");
 				return;
 			}
 
 			var random = new System.Random();
 			var (source, seat, destination) = availableSeats[random.Next(availableSeats.Count)];
-			seat.IsOccupied = true;
 
 			var visitor = VisitorScene.Instantiate<customer.Visitor>();
 			visitor.Navigator = Navigator;
 			visitor.GlobalPosition = EntryPoint.GlobalPosition;
 			visitor.Data = new customer.CustomerData();
+			visitor.AssignedSeat = seat;
+
+			GetParent().AddChild(visitor);
+
 			visitor.WalkToDestination(destination);
 			visitor.VisitCompleted += () => OnVisitorDone(visitor, seat);
 			_activeVisitors++;
-			GD.Print($"[VisitorManager] Spawned visitor ({_activeVisitors}/{MaxVisitors}) to {source} seat");
-			GetParent().AddChild(visitor);
+			Log.Info($"Spawned visitor ({_activeVisitors}/{MaxVisitors}) to {source} seat", "VisitorManager");
 		}
 
 		private void OnVisitorDone(customer.Visitor visitor, table.ISeatingSpot seat)
 		{
 			_activeVisitors--;
 			seat.IsOccupied = false;
-			GD.Print($"[VisitorManager] Visitor despawned ({_activeVisitors}/{MaxVisitors})");
+			Log.Info($"Visitor despawned ({_activeVisitors}/{MaxVisitors})", "VisitorManager");
 			visitor.QueueFree();
 		}
 	}

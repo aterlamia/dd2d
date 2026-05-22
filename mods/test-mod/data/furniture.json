@@ -1,0 +1,12 @@
+{
+  "tables": [
+    {
+      "position": [10, 10],
+      "table_tile_id": 1,
+      "table_tile_coords": [2, 1],
+      "chair_tile_id": 1,
+      "chair_tile_coords": [3, 1],
+      "chairs": ["Up", "Down"]
+    }
+  ]
+}

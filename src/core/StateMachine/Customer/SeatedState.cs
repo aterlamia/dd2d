@@ -1,5 +1,7 @@
 using System;
 using Godot;
+using dd2d.restaurant.table;
+using dd2d.core;
 
 namespace dd2d.core.StateMachine.Customer
 {
@@ -8,13 +10,15 @@ namespace dd2d.core.StateMachine.Customer
 		private Node2D _entity;
 		private Action _onSeated;
 		private AnimationPlayer _animationPlayer;
+		private ISeatingSpot _seat;
 
-		public void Init(Node2D entity, Action onSeated)
+		public void Init(Node2D entity, ISeatingSpot seat, Action onSeated)
 		{
 			_entity = entity;
+			_seat = seat;
 			_onSeated = onSeated;
 			_animationPlayer = entity.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-			GD.Print("[SeatedState] Sitting down");
+			Log.Debug("Sitting down", "SeatedState");
 
 			if (_animationPlayer != null && _animationPlayer.HasAnimation(core.AnimationKeys.Sit))
 			{
@@ -38,7 +42,9 @@ namespace dd2d.core.StateMachine.Customer
 
 		private void Finish()
 		{
-			GD.Print("[SeatedState] Now seated, starting wait");
+			Log.Debug("Now seated, starting wait", "SeatedState");
+			if (_seat != null)
+				_seat.IsOccupied = true;
 			var cb = _onSeated;
 			_onSeated = null;
 			QueueFree();

@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using dd2d.core;
 
 namespace dd2d.core.StateMachine.Customer
 {
@@ -21,7 +22,7 @@ namespace dd2d.core.StateMachine.Customer
 			_path = path;
 			_pathIndex = 0;
 			_onArrived = onArrived;
-			GD.Print($"[WalkingState] Init — path length: {path.Length}");
+			Log.Debug($"Init — path length: {path.Length}", "WalkingState");
 		}
 
 		private void PlayAnimation(Vector2 direction)
@@ -47,7 +48,7 @@ namespace dd2d.core.StateMachine.Customer
 			{
 				_finished = true;
 				PlayAnimation(Vector2.Zero);
-				GD.Print("[WalkingState] Arrived at destination");
+				Log.Info("Arrived at destination", "WalkingState");
 				var cb = _onArrived;
 				_onArrived = null;
 				QueueFree();

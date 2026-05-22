@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using dd2d.restaurant.table;
+using dd2d.core;
 
 namespace dd2d.core.StateMachine
 {
@@ -13,18 +15,20 @@ namespace dd2d.core.StateMachine
 		private Node2D _entity;
 		private Node _activeState;
 		private readonly Queue<Action> _sequence = new();
+		private ISeatingSpot _assignedSeat;
 
 		public void Init(Node2D entity)
 		{
 			_entity = entity;
-			GD.Print("[CustomerStateMachine] Initialized");
+			Log.Debug("Initialized", "CustomerStateMachine");
 		}
 
 		// Queues up the full visit sequence and starts it.
 		// Cancel at any time with CancelSequence().
-		public void BeginVisit(float speed, Vector2[] walkPath, Vector2 seatPosition, float patience, Vector2[] returnPath, Action onComplete = null)
+		public void BeginVisit(float speed, Vector2[] walkPath, Vector2 seatPosition, float patience, Vector2[] returnPath, ISeatingSpot seat, Action onComplete = null)
 		{
-			GD.Print("[CustomerStateMachine] BeginVisit started");
+			Log.Debug("BeginVisit started", "CustomerStateMachine");
+			_assignedSeat = seat;
 			_sequence.Clear();
 
 			_sequence.Enqueue(() => StartWalking(speed, walkPath, AdvanceQueue));
@@ -42,24 +46,25 @@ namespace dd2d.core.StateMachine
 			_sequence.Enqueue(() => StartLeaving(speed, returnPath, AdvanceQueue));
 			_sequence.Enqueue(() =>
 			{
-				GD.Print("[CustomerStateMachine] Visit sequence complete");
+				Log.Info("Visit sequence complete", "CustomerStateMachine");
+				_assignedSeat = null;
 				onComplete?.Invoke();
 			});
 
 			AdvanceQueue();
 		}
 
-		// Stops the current sequence and clears pending steps.
-		public void CancelSequence()
-		{
-			GD.Print("[CustomerStateMachine] Sequence cancelled");
-			_sequence.Clear();
-			ClearActiveState();
-		}
+	// Stops the current sequence and clears pending steps.
+	public void CancelSequence()
+	{
+		Log.Info("Sequence cancelled", "CustomerStateMachine");
+		_sequence.Clear();
+		ClearActiveState();
+	}
 
 		public void StartWalking(float speed, Vector2[] path, Action onArrived)
 		{
-			GD.Print($"[CustomerStateMachine] {CurrentState} → Walking");
+			Log.Debug($"{CurrentState} → Walking", "CustomerStateMachine");
 			ClearActiveState();
 			CurrentState = CustomerStateType.Walking;
 			var state = new Customer.WalkingState();
@@ -70,18 +75,18 @@ namespace dd2d.core.StateMachine
 
 		public void StartSeated(Action onSeated)
 		{
-			GD.Print($"[CustomerStateMachine] {CurrentState} → Seated");
+			Log.Debug($"{CurrentState} → Seated", "CustomerStateMachine");
 			ClearActiveState();
 			CurrentState = CustomerStateType.Seated;
 			var state = new Customer.SeatedState();
 			_activeState = state;
 			AddChild(state);
-			state.Init(_entity, onSeated);
+			state.Init(_entity, _assignedSeat, onSeated);
 		}
 
 		public void StartWaiting(float patience, Action onPatienceExpired)
 		{
-			GD.Print($"[CustomerStateMachine] {CurrentState} → Waiting (patience {patience}s)");
+			Log.Debug($"{CurrentState} → Waiting (patience {patience}s)", "CustomerStateMachine");
 			ClearActiveState();
 			CurrentState = CustomerStateType.Waiting;
 			var state = new Customer.WaitingState();
@@ -92,18 +97,18 @@ namespace dd2d.core.StateMachine
 
 		public void StartStandingUp(Vector2 stepToPosition, Action onStoodUp)
 		{
-			GD.Print($"[CustomerStateMachine] {CurrentState} → StandingUp");
+			Log.Debug($"{CurrentState} → StandingUp", "CustomerStateMachine");
 			ClearActiveState();
 			CurrentState = CustomerStateType.StandingUp;
 			var state = new Customer.StandingUpState();
 			_activeState = state;
 			AddChild(state);
-			state.Init(_entity, stepToPosition, onStoodUp);
+			state.Init(_entity, stepToPosition, _assignedSeat, onStoodUp);
 		}
 
 		public void StartLeaving(float speed, Vector2[] path, Action onArrived = null)
 		{
-			GD.Print($"[CustomerStateMachine] {CurrentState} → Leaving");
+			Log.Debug($"{CurrentState} → Leaving", "CustomerStateMachine");
 			ClearActiveState();
 			CurrentState = CustomerStateType.Leaving;
 			var state = new Customer.LeavingState();

@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using dd2d.core;
 
 namespace dd2d.core.StateMachine.Customer
 {
@@ -13,14 +14,14 @@ namespace dd2d.core.StateMachine.Customer
         private Action _onArrived;
         private bool _finished = false;
 
-        public void Init(Node2D entity, float speed, Vector2[] path, Action onArrived = null)
-        {
-            _entity = entity;
-            _animationPlayer = entity.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-            _speed = speed;
-            _path = path;
-            _onArrived = onArrived;
-            GD.Print($"[LeavingState] Init — path length: {path.Length}");
+		public void Init(Node2D entity, float speed, Vector2[] path, Action onArrived = null)
+		{
+			_entity = entity;
+			_animationPlayer = entity.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+			_speed = speed;
+			_path = path;
+			_onArrived = onArrived;
+			Log.Debug($"Init — path length: {path.Length}", "LeavingState");
         }
 
         private void PlayAnimation(Vector2 direction)
@@ -43,10 +44,10 @@ namespace dd2d.core.StateMachine.Customer
             if (_finished) return;
 
             if (_path.Length == 0 || _pathIndex >= _path.Length)
-            {
-                _finished = true;
-                PlayAnimation(Vector2.Zero);
-                GD.Print("[LeavingState] Visitor has left");
+			{
+				_finished = true;
+				PlayAnimation(Vector2.Zero);
+				Log.Info("Visitor has left", "LeavingState");
                 var cb = _onArrived;
                 _onArrived = null;
                 QueueFree();
