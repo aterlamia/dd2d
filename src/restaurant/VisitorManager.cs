@@ -8,6 +8,10 @@ namespace dd2d.restaurant
 {
 	public partial class VisitorManager : Node
 	{
+		public static VisitorManager Instance { get; private set; }
+
+		[Signal] public delegate void RatingSubmittedEventHandler(float finalQuality, string itemName);
+
 		[Export] public PackedScene VisitorScene { get; set; }
 		[Export] public int MaxVisitors { get; set; } = 5;
 		[Export] public float SpawnInterval { get; set; } = 10f;
@@ -19,12 +23,22 @@ namespace dd2d.restaurant
 		[Export] public core.Navigation.Navigator Navigator { get; set; }
 		[Export] public kitchen.KitchenManager Kitchen { get; set; }
 		[Export] public NodePath FurnitureLayerPath { get; set; }
+		[Export] public Label EarningsLabel { get; set; }
 
 		internal int _activeVisitors = 0;
 		private Timer _spawnTimer;
 		private readonly Random _random = new();
 		private int _nextPartyId = 1;
 		private readonly Dictionary<int, PartyState> _parties = new();
+		private float _totalEarnings = 0f;
+		public float TotalEarnings => _totalEarnings;
+
+		public void RegisterPayment(float amount)
+	{
+		_totalEarnings += amount;
+		if (EarningsLabel != null)
+			EarningsLabel.Text = $"Total Earnings: {_totalEarnings:F2}";
+	}
 
 		private class PartyState
 		{
@@ -33,9 +47,12 @@ namespace dd2d.restaurant
 			public List<customer.Visitor> Members = new();
 		}
 
-		public override void _Ready()
-		{
-			if (VisitorScene == null)
+	public override void _Ready()
+	{
+		Instance = this;
+		if (EarningsLabel != null)
+			EarningsLabel.Text = $"Total Earnings: {_totalEarnings:F2}";
+		if (VisitorScene == null)
 			{
 				Log.Error("VisitorScene is not set!", "VisitorManager");
 				return;

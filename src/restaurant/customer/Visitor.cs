@@ -21,6 +21,7 @@ namespace dd2d.restaurant.customer
 		private core.StateMachine.CustomerStateMachine _stateMachine;
 		private readonly Random _random = new();
 		private kitchen.Order _currentOrder;
+		public kitchen.Order CurrentOrder => _currentOrder;
 
 		public override void _Ready()
 		{
@@ -33,6 +34,9 @@ namespace dd2d.restaurant.customer
 
 			_stateMachine = GetNode<core.StateMachine.CustomerStateMachine>("StateMachine");
 			_stateMachine.Init(this);
+
+			GetNode<Sprite2D>("Icon").Visible = false;
+			GetNode<TextureProgressBar>("Indicator").Visible = false;
 		}
 
 		public void WalkToDestination(Vector2 destination)
@@ -90,6 +94,13 @@ namespace dd2d.restaurant.customer
 
 			var order = Kitchen.PlaceOrder(this);
 			_currentOrder = order;
+
+			var icon = GetNode<Sprite2D>("Icon");
+			icon.FrameCoords = order.Recipe.IconCoords;
+			icon.Visible = true;
+
+			var indicator = GetNode<TextureProgressBar>("Indicator");
+			indicator.Visible = true;
 
 			kitchen.Order captured = order;
 			void Handler(kitchen.Order completed)

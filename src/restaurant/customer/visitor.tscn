@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ie7vqcc5fpld"]
 
 [ext_resource type="Script" uid="uid://mfpfx6xdwf42" path="res://src/restaurant/customer/Visitor.cs" id="1_oi4u1"]
+[ext_resource type="Texture2D" uid="uid://d3w4od6njivr8" path="res://assets/tiles/food.ase" id="2_ppaat"]
 [ext_resource type="Texture2D" uid="uid://dr8q7u8e8pfbn" path="res://assets/characters/visitors/old_woman_spritesheet.png" id="2_vkvmr"]
 [ext_resource type="Script" uid="uid://bqxmhr0oyqj0s" path="res://src/core/StateMachine/CustomerStateMachine.cs" id="3_51pda"]
 [ext_resource type="Texture2D" uid="uid://bulubufrtkosi" path="res://assets/ui/guid/progressgray.png" id="4_ppaat"]
@@ -192,6 +193,7 @@ vframes = 6
 script = ExtResource("3_51pda")
 
 [node name="Indicator" type="TextureProgressBar" parent="." unique_id=413129502]
+visible = false
 offset_left = 4.0
 offset_top = -46.0
 offset_right = 23.0
@@ -202,3 +204,10 @@ nine_patch_stretch = true
 texture_under = ExtResource("4_ppaat")
 texture_progress = ExtResource("5_gexol")
 tint_progress = Color(0, 0.5659623, 0.17257422, 1)
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=340100601]
+visible = false
+position = Vector2(13, -37)
+texture = ExtResource("2_ppaat")
+hframes = 8
+vframes = 8

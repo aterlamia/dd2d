@@ -4,31 +4,36 @@
       "name": "Burger",
       "base_quality": 2,
       "difficulty": 1,
-      "preparation_time": 15
+      "preparation_time": 15,
+      "icon_coords": "0,0"
     },
     {
       "name": "Salad",
       "base_quality": 3,
       "difficulty": 2,
-      "preparation_time": 10
+      "preparation_time": 10,
+      "icon_coords": "1,0"
     },
     {
       "name": "Pasta",
       "base_quality": 4,
       "difficulty": 3,
-      "preparation_time": 25
+      "preparation_time": 25,
+      "icon_coords": "2,0"
     },
     {
       "name": "Pizza",
       "base_quality": 4,
       "difficulty": 4,
-      "preparation_time": 30
+      "preparation_time": 30,
+      "icon_coords": "3,0"
     },
     {
       "name": "Steak",
       "base_quality": 5,
       "difficulty": 5,
-      "preparation_time": 45
+      "preparation_time": 45,
+      "icon_coords": "4,0"
     }
   ]
 }

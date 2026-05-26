@@ -44,17 +44,17 @@ namespace dd2d.restaurant.kitchen
             _cookTimer.Start();
         }
 
-        private void OnCookingDone()
-        {
-            var item = CookedItem.Cook(CurrentOrder.Recipe, ChefData);
-            CurrentOrder.Result = item;
-            CurrentOrder.Status = OrderStatus.Completed;
+		private void OnCookingDone()
+		{
+			var item = CookedItem.Cook(CurrentOrder.Recipe, ChefData);
+			CurrentOrder.Result = item;
+			CurrentOrder.Status = OrderStatus.Completed;
 
-Log.Debug($"Chef {ChefData.ChefName} finished {item.Recipe.ItemName} (quality {item.FinalQuality:F1})", "Chef");
+			Log.Debug($"Chef {ChefData.ChefName} finished {item.Recipe.ItemName} (quality {item.FinalQuality:F1})", "Chef");
 
 			EmitSignal(SignalName.CookingFinished, item);
-			CurrentOrder = null;
 			IsIdle = true;
-        }
+			CurrentOrder = null;
+		}
     }
 }

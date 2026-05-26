@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using dd2d.restaurant.table;
+using dd2d.restaurant.customer;
 using dd2d.core;
 
 namespace dd2d.core.StateMachine
 {
-	public enum CustomerStateType { Idle, Waiting, Walking, Seated, StandingUp, Leaving }
+	public enum CustomerStateType { Idle, Waiting, Walking, Seated, StandingUp, Leaving, Eating }
 
 	public partial class CustomerStateMachine : StateMachine
 	{
@@ -16,6 +17,11 @@ namespace dd2d.core.StateMachine
 		private Node _activeState;
 		private readonly Queue<Action> _sequence = new();
 		private ISeatingSpot _assignedSeat;
+		private float _speed;
+		private Vector2[] _returnPath;
+		private Vector2 _seatPosition;
+		private bool _wasServed = false;
+		private Action _onComplete;
 
 		public void Init(Node2D entity)
 		{
@@ -25,13 +31,23 @@ namespace dd2d.core.StateMachine
 
 		// Queues up the full visit sequence and starts it.
 		// Cancel at any time with CancelSequence().
-		public void BeginVisit(float speed, Vector2[] walkPath, Vector2 seatPosition, float patience, Vector2[] returnPath, ISeatingSpot seat, Action onComplete = null, Action onPatienceExpired = null, Action onSeated = null)
-		{
-			Log.Debug("BeginVisit started", "CustomerStateMachine");
-			_assignedSeat = seat;
-			_sequence.Clear();
+	public void BeginVisit(float speed, Vector2[] walkPath, Vector2 seatPosition, float patience, Vector2[] returnPath, ISeatingSpot seat, Action onComplete = null, Action onPatienceExpired = null, Action onSeated = null)
+	{
+		Log.Debug("BeginVisit started", "CustomerStateMachine");
+		_assignedSeat = seat;
+		_speed = speed;
+		_seatPosition = seatPosition;
+		_returnPath = returnPath;
+		_onComplete = onComplete;
+		_wasServed = false;
+		_sequence.Clear();
 
-			Action patienceCallback = onPatienceExpired ?? AdvanceQueue;
+			Action patienceCallback = () =>
+			{
+				if (_wasServed)
+					return;
+				(onPatienceExpired ?? AdvanceQueue)();
+			};
 
 			_sequence.Enqueue(() => StartWalking(speed, walkPath, AdvanceQueue));
 			_sequence.Enqueue(() =>
@@ -123,17 +139,74 @@ namespace dd2d.core.StateMachine
 			state.Init(_entity, speed, path, onArrived);
 		}
 
+		public void StartEating()
+		{
+			var visitor = _entity as Visitor;
+			if (visitor == null || visitor.Data == null)
+			{
+				AdvanceQueue();
+				return;
+			}
+
+			float min = visitor.Data.MinEatTime;
+			float max = visitor.Data.MaxEatTime;
+			Log.Debug($"{CurrentState} → Eating (min {min}s, max {max}s)", "CustomerStateMachine");
+			ClearActiveState();
+			CurrentState = CustomerStateType.Eating;
+			var state = new Customer.EatingState();
+			_activeState = state;
+			AddChild(state);
+			state.Init(_entity, min, max, AdvanceQueue);
+		}
+
 		public void ProceedFromWaiting()
 		{
+			if (_activeState is Customer.WaitingState waiting)
+			{
+				waiting.StopAndHide();
+			}
+
+			_sequence.Clear();
+			_sequence.Enqueue(() =>
+			{
+				Vector2 stepTo = _returnPath.Length > 0 ? _returnPath[0] : _seatPosition;
+				StartStandingUp(stepTo, AdvanceQueue);
+			});
+			_sequence.Enqueue(() => StartLeaving(_speed, _returnPath, AdvanceQueue));
+			_sequence.Enqueue(() =>
+			{
+				Log.Info("Visit sequence complete", "CustomerStateMachine");
+				_assignedSeat = null;
+				_onComplete?.Invoke();
+			});
 			AdvanceQueue();
 		}
 
 		public void FoodArrived(float patienceBonus)
 		{
-			if (_activeState is Customer.WaitingState waiting)
-				waiting.AddPatience(patienceBonus);
-		}
+			if (_activeState is not Customer.WaitingState waiting)
+				return;
 
+			_wasServed = true;
+			waiting.AddPatience(patienceBonus);
+			waiting.StopAndHide();
+
+			_sequence.Clear();
+			_sequence.Enqueue(() => StartEating());
+			_sequence.Enqueue(() =>
+			{
+				Vector2 stepTo = _returnPath.Length > 0 ? _returnPath[0] : _seatPosition;
+				StartStandingUp(stepTo, AdvanceQueue);
+			});
+			_sequence.Enqueue(() => StartLeaving(_speed, _returnPath, AdvanceQueue));
+			_sequence.Enqueue(() =>
+			{
+				Log.Info("Visit sequence complete", "CustomerStateMachine");
+				_assignedSeat = null;
+				_onComplete?.Invoke();
+			});
+			AdvanceQueue();
+		}
 		private void AdvanceQueue()
 		{
 			if (_sequence.Count == 0) return;

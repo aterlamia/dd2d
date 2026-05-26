@@ -10,6 +10,8 @@ namespace dd2d.restaurant.kitchen
         [Export] public float BaseQuality { get; set; } = 3f;
         [Export] public float Difficulty { get; set; } = 3f;
         [Export] public float BasePreparationTime { get; set; } = 20f;
+        [Export] public float Price { get; set; } = 10f;
+        [Export] public Vector2I IconCoords { get; set; } = Vector2I.Zero;
 
         public static RecipeResource FromDictionary(Godot.Collections.Dictionary dict)
         {
@@ -33,6 +35,16 @@ namespace dd2d.restaurant.kitchen
             recipe.BasePreparationTime = dict.ContainsKey("preparation_time")
                 ? dict["preparation_time"].AsSingle()
                 : 20f;
+
+            if (dict.ContainsKey("icon_coords"))
+            {
+                var coordStr = dict["icon_coords"].AsString();
+                var parts = coordStr.Split(',');
+                if (parts.Length == 2 && int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
+                {
+                    recipe.IconCoords = new Vector2I(x, y);
+                }
+            }
 
             return recipe;
         }

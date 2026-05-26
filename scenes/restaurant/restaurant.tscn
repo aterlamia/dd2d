@@ -5,7 +5,16 @@
 [ext_resource type="PackedScene" uid="uid://b1lyp800gt3l6" path="res://src/player/character.tscn" id="4_3b4v5"]
 [ext_resource type="Script" uid="uid://p6g1rywf2856" path="res://src/restaurant/VisitorManager.cs" id="5_cqmsm"]
 [ext_resource type="Script" uid="uid://8oj2fks0b883" path="res://src/core/Navigation/Navigator.cs" id="5_qmsjo"]
+[ext_resource type="Script" uid="uid://b5cqxsibhgw8d" path="res://src/restaurant/kitchen/KitchenManager.cs" id="7_55vef"]
 [ext_resource type="Script" uid="uid://cs00emkmx512t" path="res://src/restaurant/table/TableManager.cs" id="7_iicbp"]
+[ext_resource type="Script" uid="uid://b5y6u1in2fmaj" path="res://src/restaurant/kitchen/Chef.cs" id="8_2tehs"]
+[ext_resource type="Script" uid="uid://16v3u8dax3qb" path="res://src/restaurant/kitchen/ChefData.cs" id="9_6a52p"]
+
+[sub_resource type="Resource" id="Resource_385xu"]
+script = ExtResource("9_6a52p")
+ChefName = "Peter "
+Speed = 10.0
+metadata/_custom_type_script = "uid://16v3u8dax3qb"
 
 [node name="Restaurtant" type="Node2D" unique_id=285435174]
 
@@ -35,17 +44,36 @@ position = Vector2(104, -64)
 
 [node name="Navigator" type="Node" parent="." unique_id=1614972241]
 script = ExtResource("5_qmsjo")
+UnwalkableLayerPath = NodePath("../UnWalkable")
 
-[node name="VisitorManager" type="Node" parent="." unique_id=46914748 node_paths=PackedStringArray("EntryPoint", "Navigator")]
+[node name="VisitorManager" type="Node" parent="." unique_id=46914748 node_paths=PackedStringArray("EntryPoint", "Navigator", "Kitchen", "EarningsLabel")]
 script = ExtResource("5_cqmsm")
 VisitorScene = ExtResource("3_3b4v5")
 EntryPoint = NodePath("EntryPoint")
 Navigator = NodePath("../Navigator")
+Kitchen = NodePath("../KitchenManager")
 FurnitureLayerPath = NodePath("../Furniture")
+EarningsLabel = NodePath("Label")
 
 [node name="EntryPoint" type="Marker2D" parent="VisitorManager" unique_id=353951015]
 position = Vector2(48, 281)
 
+[node name="Label" type="Label" parent="VisitorManager" unique_id=273921671]
+offset_left = -39.0
+offset_top = -150.0
+offset_right = 1.0
+offset_bottom = -127.0
+text = "none"
+
 [node name="TableManager" type="Node" parent="." unique_id=131241236]
 script = ExtResource("7_iicbp")
 FurnitureLayerPath = NodePath("../Furniture")
+
+[node name="KitchenManager" type="Node" parent="." unique_id=1561728942]
+script = ExtResource("7_55vef")
+ChefPaths = Array[NodePath]([NodePath("Chef")])
+
+[node name="Chef" type="Node2D" parent="KitchenManager" unique_id=1262015795]
+position = Vector2(-48, -62)
+script = ExtResource("8_2tehs")
+ChefData = SubResource("Resource_385xu")
